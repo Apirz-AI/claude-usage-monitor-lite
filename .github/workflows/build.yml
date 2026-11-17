@@ -1,0 +1,97 @@
+# Baut automatisch die Firmware und die 3D-Druck-Dateien
+# und veroeffentlicht alles auf der Projekt-Webseite (GitHub Pages).
+name: Bauen und veroeffentlichen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: ESP32-Unterstuetzung und Bibliotheken installieren
+        run: |
+          arduino-cli config init --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install LovyanGFX ArduinoJson WiFiManager
+
+      - name: Firmware bauen (2 Sprachen x 2 USB-Seiten)
+        run: |
+          for lang in de en; do
+            mkdir -p "site/${lang}/web"
+            for v in links:1 rechts:3; do
+              name=${v%%:*}; rot=${v##*:}
+              arduino-cli compile \
+                --fqbn "esp32:esp32:esp32:PartitionScheme=huge_app" \
+                --build-property "compiler.cpp.extra_flags=-DDISPLAY_ROTATION=${rot}" \
+                --output-dir "build-${lang}-${name}" "${lang}/firmware/UsageMonitor"
+              cp "build-${lang}-${name}/UsageMonitor.ino.merged.bin" "site/${lang}/web/UsageMonitor-usb-${name}.bin"
+            done
+          done
+
+      - name: Gehaeuse-Dateien (STL) erzeugen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad
+          for lang in de en; do
+            mkdir -p "${lang}/stl"
+            for v in links rechts; do
+              for t in gehaeuse deckel fuss; do
+                openscad -o "${lang}/stl/usagemonitor_usb-${v}_${t}.stl" -D "usb=\"${v}\"" -D "teil=\"${t}\"" "${lang}/enclosure/usagemonitor_gehaeuse.scad"
+              done
+            done
+          done
+
+      - name: Je Sprache einen kompletten Ordner zusammenstellen
+        run: |
+          cp index.html site/
+          for lang in de en; do
+            cp -r "${lang}/." "site/${lang}/"
+          done
+          cd site
+          mv de Claude-Usage-Monitor-Lite-Deutsch && zip -qr Claude-Usage-Monitor-Lite-Deutsch.zip Claude-Usage-Monitor-Lite-Deutsch && mv Claude-Usage-Monitor-Lite-Deutsch de
+          mv en Claude-Usage-Monitor-Lite-English && zip -qr Claude-Usage-Monitor-Lite-English.zip Claude-Usage-Monitor-Lite-English && mv Claude-Usage-Monitor-Lite-English en
+
+      - name: Deutsches Paket ablegen (auch bei privatem Projekt)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Claude-Usage-Monitor-Lite-Deutsch
+          path: site/de
+
+      - name: Englisches Paket ablegen (auch bei privatem Projekt)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Claude-Usage-Monitor-Lite-English
+          path: site/en
+
+      - uses: actions/upload-pages-artifact@v3
+        if: ${{ !github.event.repository.private }}
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

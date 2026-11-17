@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Usage Monitor Lite</title>
+<meta name="description" content="Günstiger Mini-Monitor im 90er-Look ohne Akku, zeigt dein Claude-Limit. Teile, Druckdateien und Ein-Klick-Installation.">
+<script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
+<script>(function(){try{var t=localStorage.getItem('cum-theme'); if(t) document.documentElement.dataset.theme=t}catch(e){}})();</script>
+<style>
+:root{--bg:#fff;--fg:#1d1d1f;--sub:#6e6e73;--card:#f5f5f7;--line:#d2d2d7;--accent:#D97757;--ok:#34c759;--wait:#ff9f0a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000;--fg:#f5f5f7;--sub:#98989d;--card:#1c1c1e;--line:#38383a}}
+:root[data-theme="dark"]{--bg:#000;--fg:#f5f5f7;--sub:#98989d;--card:#1c1c1e;--line:#38383a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+header b{font-size:15px;white-space:nowrap}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pill{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:20px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px;white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card)}
+.seg a{color:var(--sub);font-size:13px;padding:6px 11px;text-decoration:none}
+.seg a.on{background:var(--fg);color:var(--bg)}
+main{max-width:720px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:clamp(32px,7vw,46px);line-height:1.05;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+p{color:var(--sub);margin:6px 0}
+.lead{font-size:19px;color:var(--sub)}
+.hero{background:var(--card);border-radius:22px;padding:18px;margin:20px 0 12px}
+.hero img{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chips>span{border:1px solid var(--line);border-radius:20px;padding:4px 11px;font-size:13px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.ok{background:var(--ok)}.wait{background:var(--wait)}
+.step{background:var(--card);border-radius:18px;padding:18px 18px 18px 64px;margin:12px 0;position:relative}
+.step .n{position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;background:var(--fg);color:var(--bg);font-weight:700;display:grid;place-items:center;font-size:15px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btns a{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--bg);font-size:14px}
+.btns a:hover{border-color:var(--fg)}
+.var{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.var>div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}
+.var h3{font-size:15px;margin:0 0 2px}
+.var p{font-size:13px;margin:0 0 8px}
+.var .btns{margin-top:6px}.var .btns a{padding:6px 10px;font-size:13px}
+ul.tight{margin:8px 0 0;padding-left:18px;color:var(--sub)}
+ul.tight li{margin:3px 0}
+b,strong{color:var(--fg)}
+a{color:var(--accent)}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--fg);word-break:break-all}
+details{background:var(--card);border-radius:18px;padding:14px 18px;margin:12px 0}
+summary{cursor:pointer;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--sub)}
+td:first-child{color:var(--fg);white-space:nowrap;padding-right:12px}
+.note{font-size:13px;border-left:3px solid var(--accent);padding:2px 0 2px 12px;margin:16px 0}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:14px;font-size:13px;color:var(--sub)}
+esp-web-install-button{display:inline-block}
+@media (max-width:520px){.var{grid-template-columns:1fr}.step{padding-left:18px;padding-top:58px}header b{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <b>Claude Usage Monitor Lite</b>
+  <div class="tools">
+    <div class="seg" role="group" aria-label="Language"><a href="../de/index.html" class="on">DE</a><a href="../en/index.html">EN</a></div>
+    <button class="pill" id="theme" type="button">Hell / Dunkel</button>
+  </div>
+</header>
+<main>
+  <h1>Claude Usage Monitor Lite</h1>
+  <p class="lead">Die günstige Variante ohne Akku: ein Mini-Monitor im 90er-Look für deinen Schreibtisch. Er zeigt dein Claude-Limit: Sitzung, Woche und wann es zurückgesetzt wird.</p>
+
+  <div class="hero"><img src="web/hero.svg" alt="Claude Usage Monitor Lite"></div>
+
+  <div class="chips"><span>≈ 16 €</span><span>kein Löten</span><span>Touch-Display</span><span>USB-Strom</span><span>DE / EN</span></div>
+  <div class="chips">
+    <span><i class="dot ok"></i>Teile und Druckdateien fertig</span>
+    <span><i class="dot wait"></i>Software noch nicht am Gerät getestet</span>
+  </div>
+
+  <p class="note"><b>Mit Akku?</b> Es gibt auch die teurere Variante mit eingebautem Akku (ca. 35 €). <a href="https://apirz-ai.github.io/claude-usage-monitor/de/">Zur Akku-Variante</a></p>
+
+  <div class="step"><span class="n">1</span>
+    <h2>Teil kaufen</h2>
+    <p>Ein Board mit Display, ca. 16 €. Dazu ein USB-Kabel mit Datenleitungen und ein 5-V-Netzteil. Einen Akku gibt es hier nicht; für mobil eine Powerbank anstecken.</p>
+    <div class="btns">
+      <a href="https://www.amazon.de/dp/B0H44PR159" target="_blank" rel="noopener">Board · ESP32-2432S028 (2,8 Zoll)</a>
+    </div>
+  </div>
+
+  <div class="step"><span class="n">2</span>
+    <h2>Gehäuse drucken</h2>
+    <p>Drei Teile, eine Farbe, PLA, 0,2 mm, 15 %, ohne Stützen. Welche Seite? Erst Software testen: steht das Bild auf dem Kopf, nimm die andere.</p>
+    <div class="var">
+      <div>
+        <h3>„USB links“ · Standard</h3>
+        <p>USB-Buchse im Querformat links.</p>
+        <div class="btns">
+          <a href="stl/usagemonitor_usb-links_gehaeuse.stl" download>Gehäuse</a>
+          <a href="stl/usagemonitor_usb-links_deckel.stl" download>Deckel</a>
+          <a href="stl/usagemonitor_usb-links_fuss.stl" download>Fuß</a>
+        </div>
+      </div>
+      <div>
+        <h3>„USB rechts“</h3>
+        <p>USB-Buchse im Querformat rechts.</p>
+        <div class="btns">
+          <a href="stl/usagemonitor_usb-rechts_gehaeuse.stl" download>Gehäuse</a>
+          <a href="stl/usagemonitor_usb-rechts_deckel.stl" download>Deckel</a>
+          <a href="stl/usagemonitor_usb-rechts_fuss.stl" download>Fuß</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step"><span class="n">3</span>
+    <h2>Software aufspielen</h2>
+    <p>Board per USB an den Computer stecken (Kabel mit Datenleitungen) und in Chrome oder Edge den Knopf klicken. Die Anzeige erscheint in der gewählten Sprache.</p>
+    <div class="btns" id="flash"></div>
+    <p style="font-size:13px">Gerät nicht gefunden? Treiber CH340 bzw. CP210x installieren, dann BOOT halten, RST kurz drücken, BOOT loslassen.</p>
+  </div>
+
+  <div class="step"><span class="n">4</span>
+    <h2>Zusammenbauen</h2>
+    <ul class="tight"><li>Board von hinten einlegen, Display zur Frontscheibe.</li><li>Kabel seitlich einstecken, Deckel aufstecken.</li><li>Auf den Fuß stecken.</li></ul>
+  </div>
+
+  <div class="step"><span class="n">5</span>
+    <h2>Mit Claude verbinden</h2>
+    <ul class="tight"><li>Einmalig Claude Code installieren: <code>irm https://claude.ai/install.ps1 | iex</code></li><li>Einrichtungs-Skript starten, anmelden, „Gerät“ wählen.</li><li>WLAN <b>UsageMonitor-Setup</b> wählen, dein WLAN und den Token eintragen.</li></ul>
+    <div class="btns">
+      <a href="setup/UsageMonitor-Einrichtung.ps1" download>Einrichtungs-Skript (Windows)</a>
+      <a href="widget/ClaudeUsage.js" download>Bonus: iPhone-Widget</a>
+    </div>
+  </div>
+
+  <details>
+    <summary>Bedienung</summary>
+    <table><tr><td>Strom</td><td>USB anstecken = an, abziehen = aus</td></tr><tr><td>Tippen</td><td>Bildschirm kurz antippen = neu laden</td></tr><tr><td>10 s halten</td><td>Bildschirm 10 s halten = alles zurücksetzen</td></tr></table>
+  </details>
+
+  <details>
+    <summary>Was ist was? Die Dateien erklärt</summary>
+    <table><tr><td>stl/</td><td>Die Druckdateien. Brauchst du zum Drucken.</td></tr><tr><td>setup/</td><td>Windows-Skript, holt den Claude-Zugang. Einmal pro Gerät.</td></tr><tr><td>widget/</td><td>Bonus für das iPhone.</td></tr><tr><td>firmware/</td><td>Quellcode der Gerätesoftware. Wird automatisch gebaut und hier mit einem Klick aufgespielt.</td></tr><tr><td>enclosure/</td><td>Bauplan des Gehäuses. Nur zum Ändern.</td></tr><tr><td>.github/</td><td>Bau-Automatik von GitHub. Nichts zu tun.</td></tr></table>
+  </details>
+
+  <p class="note"><b>Tester gesucht:</b> Die Gerätesoftware ist geschrieben, die Gehäusemaße stammen aus Datenblättern. Beides ist noch nicht an echter Hardware getestet. Wer früher nachbaut, schreibt seine Erfahrungen gern in die Issues.</p>
+
+  <div class="btns">
+    <a href="https://github.com/Apirz-AI/claude-usage-monitor-lite/tree/main/de#readme" target="_blank" rel="noopener">Ausführliche Anleitung</a>
+    <a href="https://github.com/Apirz-AI/claude-usage-monitor-lite/issues" target="_blank" rel="noopener">Issues</a>
+    <a href="https://github.com/Apirz-AI/claude-usage-monitor-lite" target="_blank" rel="noopener">GitHub</a>
+  </div>
+
+  <footer>Idee und Entwicklung: A.Pirzadeh · Lizenz MIT · Inoffizielles Bastelprojekt. Claude ist eine Marke von Anthropic, dieses Projekt steht in keiner Verbindung zu Anthropic. Es nutzt eine nicht dokumentierte Schnittstelle, die sich ändern kann.</footer>
+</main>
+<script>
+(function(){
+  var r=document.documentElement;
+  var names=['links','rechts'], labels=['USB links', 'USB rechts'];
+  function flash(){
+    var box=document.getElementById('flash'); box.innerHTML='';
+    names.forEach(function(n,i){
+      var b=document.createElement('esp-web-install-button');
+      b.setAttribute('manifest','web/manifest-usb-'+n+'.json');
+      var a=document.createElement('a'); a.slot='activate'; a.href='#';
+      a.textContent='Installieren · '+labels[i]; a.onclick=function(e){e.preventDefault()};
+      var u=document.createElement('span'); u.slot='unsupported'; u.style.fontSize='13px';
+      u.textContent='Bitte Chrome oder Edge am Computer nehmen.';
+      b.appendChild(a); b.appendChild(u); box.appendChild(b);
+    });
+  }
+  document.getElementById('theme').onclick=function(){
+    var dark=r.dataset.theme? r.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    r.dataset.theme=dark?'light':'dark'; try{localStorage.setItem('cum-theme',r.dataset.theme)}catch(e){}
+  };
+  flash();
+})();
+</script>
+</body>
+</html>

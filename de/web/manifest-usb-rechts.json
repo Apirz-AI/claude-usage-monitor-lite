@@ -1,0 +1,6 @@
+{
+  "name": "Claude Usage Monitor Lite (USB rechts, de)",
+  "version": "0.9.0",
+  "new_install_prompt_erase": true,
+  "builds": [{ "chipFamily": "ESP32", "parts": [{ "path": "UsageMonitor-usb-rechts.bin", "offset": 0 }] }]
+}

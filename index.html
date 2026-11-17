@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Usage Monitor Lite Lite</title>
+<script>(function(){try{var t=localStorage.getItem('cum-theme'); if(t) document.documentElement.dataset.theme=t}catch(e){}
+  // Automatisch zur passenden Sprache / go to the matching language
+  if(!/[?&]choose/.test(location.search)) location.replace(((navigator.language||'en').toLowerCase().indexOf('de')===0?'de':'en')+'/index.html');
+})();</script>
+<style>
+:root{--bg:#fff;--fg:#1d1d1f;--sub:#6e6e73;--card:#f5f5f7;--line:#d2d2d7;--accent:#D97757;--ok:#34c759;--wait:#ff9f0a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000;--fg:#f5f5f7;--sub:#98989d;--card:#1c1c1e;--line:#38383a}}
+:root[data-theme="dark"]{--bg:#000;--fg:#f5f5f7;--sub:#98989d;--card:#1c1c1e;--line:#38383a}
+html[data-lang="de"] [lang="en"]:not(html),html[data-lang="en"] [lang="de"]:not(html){display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+header b{font-size:15px;white-space:nowrap}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pill{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:20px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px;white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;color:var(--sub);font:inherit;font-size:13px;padding:6px 11px;cursor:pointer}
+html[data-lang="de"] .seg [data-l="de"],html[data-lang="en"] .seg [data-l="en"]{background:var(--fg);color:var(--bg)}
+main{max-width:720px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:clamp(32px,7vw,46px);line-height:1.05;margin:6px 0 10px;letter-spacing:-.02em}
+h2{font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+p{color:var(--sub);margin:6px 0}
+.lead{font-size:19px;color:var(--sub)}
+.hero{background:var(--card);border-radius:22px;padding:18px;margin:20px 0 12px}
+.hero img{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chips>span{border:1px solid var(--line);border-radius:20px;padding:4px 11px;font-size:13px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.ok{background:var(--ok)}.wait{background:var(--wait)}
+.step{background:var(--card);border-radius:18px;padding:18px 18px 18px 64px;margin:12px 0;position:relative}
+.step .n{position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;background:var(--fg);color:var(--bg);font-weight:700;display:grid;place-items:center;font-size:15px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btns a{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--bg);font-size:14px}
+.btns a:hover{border-color:var(--fg)}
+.var{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.var>div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}
+.var h3{font-size:15px;margin:0 0 2px}
+.var p{font-size:13px;margin:0 0 8px}
+.var .btns{margin-top:6px}.var .btns a{padding:6px 10px;font-size:13px}
+ul.tight{margin:8px 0 0;padding-left:18px;color:var(--sub)}
+ul.tight li{margin:3px 0}
+b,strong{color:var(--fg)}
+a{color:var(--accent)}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--fg);word-break:break-all}
+details{background:var(--card);border-radius:18px;padding:14px 18px;margin:12px 0}
+summary{cursor:pointer;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--sub)}
+td:first-child{color:var(--fg);white-space:nowrap;padding-right:12px}
+.note{font-size:13px;border-left:3px solid var(--accent);padding:2px 0 2px 12px;margin:16px 0}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:14px;font-size:13px;color:var(--sub)}
+esp-web-install-button{display:inline-block}
+@media (max-width:520px){.var{grid-template-columns:1fr}.step{padding-left:18px;padding-top:58px}header b{display:none}}
+</style>
+</head>
+<body>
+<main style="text-align:center;padding-top:12vh">
+  <h1>Claude Usage Monitor Lite Lite</h1>
+  <div class="hero"><img src="de/web/hero.svg" alt="Claude Usage Monitor Lite Lite"></div>
+  <div class="btns" style="justify-content:center">
+    <a class="main" href="de/index.html">Deutsch</a>
+    <a class="main" href="en/index.html">English</a>
+  </div>
+</main>
+</body>
+</html>
