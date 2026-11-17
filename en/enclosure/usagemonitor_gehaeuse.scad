@@ -49,11 +49,13 @@ usb_oeff_t = 11.0;   // Oeffnung: Tiefe (Richtung Gehaeuse-hinten)
 wand      = 2.4;
 front     = 2.6;     // Vorderwand
 spiel     = 0.4;
-rand_o    = 5.0;     // Rahmen oben/unten/seitlich um die Platine
+rand_s    = 5.0;     // Rahmen seitlich
+rand_o    = 12.0;    // Rahmen oben (Roehren-Look, wie beim Akku-Modell)
+boden     = 12.0;    // Kinn unten (Knoepfe, LED, Schalter-Optik)
 ecke_r    = 3.5;
 ruecken_r = 3.0;
 front_d   = 9.0;     // Tiefe des geraden Rahmens vorne
-tiefe_extra = 7.0;   // zusaetzliche Tiefe fuer den Roehren-Look
+tiefe_extra = 8.0;   // zusaetzliche Tiefe fuer den Roehren-Look
 deckel_t  = 2.4;
 lippe_t   = 3.0;
 toleranz  = 0.25;
@@ -61,31 +63,35 @@ toleranz  = 0.25;
 $fn = 48;
 
 // ---------------- Abgeleitete Masse ----------------------------------
+// Das Bild sitzt MITTIG in der Front (wie beim Akku-Modell). Weil das Board
+// auf der USB-Seite laenger ist als das Display, wird das Gehaeuse
+// symmetrisch gebaut; auf der anderen Seite bleibt massive Wand.
 links = (usb == "links");
+bl_usb = board_l - glas_ende;                   // Bildmitte bis USB-Ende
+halb   = max(glas_ende, bl_usb) + spiel;        // halbe Innenbreite (symmetrisch)
+aus_b  = 2*(halb + rand_s + wand);
+cx     = aus_b/2;                               // Bildmitte (waagerecht)
+
 inn_b = board_l + 2*spiel;
-inn_h = board_h + 2*spiel;
 bett_t = pcb_t + rueck_t;                       // Platine + Platz dahinter
 inn_t = bett_t + lippe_t + 0.5 + tiefe_extra;   // Innenraum ab Modul-Tasche
+inn_h = board_h + 2*spiel;
+// Board: USB-Ende liegt an der Seitenwand mit der Kabeloeffnung
+board_x = links ? cx - bl_usb : cx - glas_ende;
+inn_x   = board_x - spiel;
 
-kinn  = 11.0;                                   // unterer Rahmen (Roehren-Kinn)
-aus_b = inn_b + 2*(rand_o + wand);
-aus_h = kinn + inn_h + wand + rand_o;
+aus_h = boden + inn_h + wand + rand_o;
 aus_t = front + modul_t + inn_t;
+inn_z = boden;
+rue_x = rand_s;  rue_b = aus_b - 2*rand_s;
+rue_z = 0;       rue_h = aus_h - rand_o*0.5;
 
-inn_x = rand_o + wand;
-inn_z = kinn;
-rue_x = rand_o;  rue_b = aus_b - 2*rand_o;
-rue_z = 0;       rue_h = aus_h - rand_o;
-
-// Platine im Querformat: USB-Ende links oder rechts
-board_x = inn_x + spiel;
 board_z = inn_z + spiel;
 // Display-Modul sitzt am Ende gegenueber der USB-Buchse
 modul_x = links ? board_x + board_l - modul_l : board_x;
 modul_z = board_z + (board_h - modul_h)/2;
-// Bildmitte
-bild_cx = links ? board_x + board_l - glas_ende : board_x + glas_ende;
-g_x = bild_cx - glas_b/2;
+// Bild
+g_x = cx - glas_b/2;
 g_z = board_z + board_h/2 - glas_h/2;
 
 // Fuss-Aufnahme
@@ -110,7 +116,7 @@ module koerper() {
 }
 
 module gehaeuse() {
-  kz = (g_z - 1.0 - 3.0) / 2 + 1.0;            // Mitte des Kinns
+  kz = (g_z - 2.5) / 2;                          // Mitte des Kinns
   difference() {
     koerper();
 
@@ -129,10 +135,10 @@ module gehaeuse() {
     }
 
     // USB-Oeffnung in der Seitenwand (Kabel faehrt seitlich raus)
-    ux = links ? -1 : aus_b - inn_x - 1;
+    ux = links ? -1 : inn_x + inn_b - 1;
     uz = board_z + board_h - usb_mitte - usb_oeff_b/2;
     translate([ux, front + modul_t + pcb_t + 0.5, uz])
-      cube([inn_x + 2, usb_oeff_t, usb_oeff_b]);
+      cube([links ? inn_x + 2 : aus_b - (inn_x + inn_b) + 2, usb_oeff_t, usb_oeff_b]);
 
     // Kinn: Regler-Mulden rechts, Power-LED links
     for (i = [0:3])
@@ -142,9 +148,8 @@ module gehaeuse() {
     // Lueftungsschlitze oben und seitlich am Ruecken
     for (i = [0:4])
       translate([rue_x + 8, aus_t - 5 - i*2.6, inn_z + inn_h - 0.5]) cube([rue_b - 16, 1.2, 20]);
-    for (i = [0:3])
-      translate([links ? aus_b - rand_o - wand - 1 : -1, aus_t - 5 - i*2.6, inn_z + 8])
-        cube([rand_o + wand + 2, 1.2, inn_h - 16]);
+    for (i = [0:4])
+      translate([-1, aus_t - 5 - i*2.6, inn_z + 6]) cube([aus_b + 2, 1.2, inn_h - 12]);
 
     // Aufnahme fuer den Fuss
     translate([zap_x, zap_y, -1]) cube([zap_b, zap_t, zap_h + 1]);
@@ -155,7 +160,7 @@ module gehaeuse() {
 }
 
 // ---------------- Standfuss (oval, Dreh-Fuss-Optik) ------------------
-fuss_b = aus_b*0.62;
+fuss_b = aus_b*0.7;
 fuss_t = aus_t*0.85;
 module fuss() {
   hull() {
