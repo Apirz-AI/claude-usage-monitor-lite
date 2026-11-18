@@ -21,7 +21,7 @@ Each folder is complete on its own. Pick **one**. · Jeder Ordner ist für sich 
 |---|---|---|
 | Price · Preis | ≈ €35 (more expensive · teurer) | ≈ €16 (cheaper · günstiger) |
 | Battery · Akku | yes · ja | no, USB power (power bank possible) · nein, USB-Strom (Powerbank möglich) |
-| Board | Waveshare ESP32-S3-LCD-1.69 | ESP32-2432S028 ("CYD", 2.8", touch) |
+| Board | Waveshare ESP32-S3-LCD-1.69 | ESP32-2432S028 ("CYD", 2.8", touch, ILI9341 or ST7789) |
 | Repo | [claude-usage-monitor](https://github.com/Apirz-AI/claude-usage-monitor) | claude-usage-monitor-lite |
 
 Both folders contain the same things (guide, print files, device software, setup script, iPhone widget), only the language differs. · In beiden Ordnern steckt dasselbe (Anleitung, Druckdateien, Gerätesoftware, Einrichtungs-Skript, iPhone-Widget), nur die Sprache ist anders.

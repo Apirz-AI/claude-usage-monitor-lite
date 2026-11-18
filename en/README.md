@@ -61,10 +61,11 @@ Session (5 hours), week (7 days) and when it resets. Powered over a USB cable, c
 | Part | Purpose | Example (Amazon.de) | approx. price |
 |---|---|---|---|
 | **ESP32-2432S028 ("CYD", Cheap Yellow Display)**, 2.8 inch, 320 × 240, touch | Tiny computer with Wi-Fi **and** display in one | [B0H44PR159](https://www.amazon.de/dp/B0H44PR159) | €16 |
+| *or:* the same board in the **ST7789** chip version (USB-C **and** Micro-USB) | same, use the ST7789 button on the project page | [B0GG3D3H8F](https://www.amazon.de/dp/B0GG3D3H8F) | €19 |
 | **PLA filament** in **cream / bone white** (the classic colour of old monitors; beige or light grey also work), e.g. eSUN Matte PLA *cream white* | Case (about 110–150 g needed) | [B0D7GSSH41](https://www.amazon.de/dp/B0D7GSSH41) | about €10 / kg |
 | USB cable (Micro-USB or USB-C depending on the board, **with data lines**) + 5 V USB charger | Power and installing the software | usually already at home | – |
 
-Prices: November 2026. Many shops sell this board; look for **ESP32-2432S028** and **2.8 inch**.
+Prices: November 2026. Many shops sell this board; look for **ESP32-2432S028** and **2.8 inch**. It comes with two different display chips (**ILI9341** or **ST7789**). Both work, you just pick the matching button when installing. The chip is usually named in the description.
 
 💡 **Tip:** Schools, makerspaces and libraries often have 3D printers **with** filament. Just ask.
 
@@ -158,7 +159,7 @@ This is called **flashing**: the software is loaded onto the little computer, li
 
 1. Connect the board to your computer by USB (cable **with data lines**).
 2. Open the [**project page**](https://apirz-ai.github.io/claude-usage-monitor-lite/en/) in **Chrome** or **Edge** (Safari and Firefox can't do this).
-3. Click **"Install · USB left"** → choose the device → **Install**. If the picture is upside down later, use **"USB right"**.
+3. Pick the matching button: **USB side** (left/right) and **display chip** (ILI9341 or ST7789, named in the Amazon description; a board with USB-C **and** Micro-USB usually has ST7789). For example click **"Install · USB left · ILI9341"** → choose the device → **Install**. If the picture is upside down later, use **"USB right"**.
 4. Wait for "Installation complete". Done.
 
 **Windows can't find the device?** The board uses a CH340 or CP210x chip. Install the manufacturer driver if needed (search "CH340 driver" or "CP210x driver") and restart Chrome.
@@ -248,7 +249,7 @@ The iPhone also needs its **own** login, so run the script once per device.
 | PowerShell: *"claude" is not recognized* | The setup script looks for Claude Code by itself. Otherwise close PowerShell, open it again and retry. |
 | Download of the `.ps1` file is blocked | Choose "Keep" in the browser. Or copy the content from the web page into a file `UsageMonitor-Einrichtung.ps1`. |
 | Computer doesn't detect the board | Try another cable (some only charge). Install the CH340/CP210x driver. Hold BOOT, tap RST. |
-| Screen stays white or black after install | Some boards use a different display chip (ST7789 instead of ILI9341). In `config.h` enable the line `#define DISPLAY_ST7789`, set `DISPLAY_INVERT` to `true` and reflash with the Arduino IDE. Please report it in Issues. |
+| Screen stays white or black after install | Wrong display chip chosen. Install the button with the **other chip** (ILI9341 ↔ ST7789) from the project page. Nothing can break. |
 | Colours look like a negative, or red/blue swapped | In `config.h` switch `DISPLAY_INVERT` or `DISPLAY_RGB_ORDER` (`true`/`false`). |
 | Picture is upside down | Flash the **other** USB side from the web page (and print the matching case), or switch `DISPLAY_ROTATION` between `1` and `3` in `config.h`. |
 | Touch doesn't respond | Use the BOOT button (back) instead. Please report it in Issues. |
@@ -257,7 +258,7 @@ The iPhone also needs its **own** login, so run the script once per device.
 | Display says **"Wi-Fi lost"** | Check your router. New Wi-Fi: hold the screen 10 seconds and set up again. |
 | Sporadic errors when fetching | `SPRITE_BITS` in `config.h` is `8` (saves memory). If you set it to `16`, change it back to `8`. |
 | Session shows **"No session"** | Normal when no 5-hour window is running. |
-| USB plug doesn't fit through the side opening | Make `usb_oeff_b` / `usb_oeff_t` larger in the `.scad` file and print again. |
+| USB plug doesn't fit through the side opening | Make `usb_oeff_b` / `usb_oeff_t` larger in the `.scad` file and print again. If the socket is not centred (e.g. board with two sockets), adjust `usb_mitte` (distance from socket centre to the top board edge). |
 | Board doesn't fit the case | Adjust dimensions in the `.scad` file (section 2). |
 
 ---

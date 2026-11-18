@@ -1,0 +1,16 @@
+{
+  "name": "Claude Usage Monitor Lite (USB rechts, ST7789, de)",
+  "version": "0.9.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "UsageMonitor-usb-rechts-st7789.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

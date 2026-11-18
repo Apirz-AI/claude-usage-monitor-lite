@@ -33,14 +33,19 @@
 #define POLL_INTERVAL_S 120
 #define SETUP_AP_NAME "UsageMonitor-Setup"
 
-// Selten: Manche Boards haben statt ILI9341 einen ST7789-Chip (Bild bleibt weiss/Streifen).
-// Dann die naechste Zeile aktivieren (Arduino IDE) und DISPLAY_INVERT auf true stellen:
+// Manche Boards (oft die Version mit USB-C UND Micro-USB) haben statt ILI9341 einen ST7789-Chip.
+// Die Projektseite hat dafuer eigene Installieren-Knoepfe. In der Arduino IDE: naechste Zeile
+// aktivieren und DISPLAY_INVERT auf true stellen:
 // #define DISPLAY_ST7789
 
 // Farben/Anzeige: Wenn die Farben vertauscht oder wie ein Negativ aussehen,
 // hier umstellen (manche Boards haben ein anderes Display-Modell).
+#ifndef DISPLAY_INVERT
 #define DISPLAY_INVERT false
+#endif
+#ifndef DISPLAY_RGB_ORDER
 #define DISPLAY_RGB_ORDER false
+#endif
 
 // Drehung: 1 = Querformat, 3 = Querformat um 180 Grad gedreht
 #ifndef DISPLAY_ROTATION

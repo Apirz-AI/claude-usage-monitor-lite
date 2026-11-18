@@ -153,7 +153,7 @@ html[data-ek-dunkel] img,html[data-ek-dunkel] video,html[data-ek-dunkel] picture
     malen();
   }
   function ersatz(){
-    if(themen.length||schwebend)return;
+    if(imRahmen||themen.length||schwebend)return;
     schwebend=document.createElement('button');schwebend.type='button';schwebend.className='ek-knopf ek-schwebend';schwebend.setAttribute('data-ek','ersatz');
     try{if(localStorage.getItem(FB_KEY)==='1')R.setAttribute('data-ek-dunkel','')}catch(e){}
     schwebend.addEventListener('click',function(){
@@ -163,7 +163,10 @@ html[data-ek-dunkel] img,html[data-ek-dunkel] video,html[data-ek-dunkel] picture
     });
     document.body.appendChild(schwebend);themen.push(schwebend);malen();
   }
+  var imRahmen=false;
+  try{imRahmen=window.parent!==window&&!!window.parent.document.querySelector('[data-ek="thema"],.kopf-knoepfe')}catch(e){}
   function start(){
+    if(imRahmen){var st=document.createElement('style');st.textContent='html body .ek-knopf[data-ek="thema"]{display:none!important}';(document.head||document.documentElement).appendChild(st)}
     umbauen();
     var mo=new MutationObserver(function(){umbauen()});
     mo.observe(document.body,{childList:true,subtree:true});

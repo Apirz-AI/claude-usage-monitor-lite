@@ -31,17 +31,21 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli lib install LovyanGFX ArduinoJson WiFiManager
 
-      - name: Firmware bauen (2 Sprachen x 2 USB-Seiten)
+      - name: Firmware bauen (2 Sprachen x 2 USB-Seiten x 2 Display-Chips)
         run: |
           for lang in de en; do
             mkdir -p "site/${lang}/web"
             for v in links:1 rechts:3; do
               name=${v%%:*}; rot=${v##*:}
-              arduino-cli compile \
-                --fqbn "esp32:esp32:esp32:PartitionScheme=huge_app" \
-                --build-property "compiler.cpp.extra_flags=-DDISPLAY_ROTATION=${rot}" \
-                --output-dir "build-${lang}-${name}" "${lang}/firmware/UsageMonitor"
-              cp "build-${lang}-${name}/UsageMonitor.ino.merged.bin" "site/${lang}/web/UsageMonitor-usb-${name}.bin"
+              for chip in ili9341 st7789; do
+                flags="-DDISPLAY_ROTATION=${rot}"; suffix=""
+                if [ "$chip" = "st7789" ]; then flags="$flags -DDISPLAY_ST7789 -DDISPLAY_INVERT=true"; suffix="-st7789"; fi
+                arduino-cli compile \
+                  --fqbn "esp32:esp32:esp32:PartitionScheme=huge_app" \
+                  --build-property "compiler.cpp.extra_flags=${flags}" \
+                  --output-dir "build-${lang}-${name}-${chip}" "${lang}/firmware/UsageMonitor"
+                cp "build-${lang}-${name}-${chip}/UsageMonitor.ino.merged.bin" "site/${lang}/web/UsageMonitor-usb-${name}${suffix}.bin"
+              done
             done
           done
 

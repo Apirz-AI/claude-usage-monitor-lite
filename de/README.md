@@ -61,10 +61,11 @@ Sitzung (5 Stunden), Woche (7 Tage) und wann es wieder zurückgesetzt wird. Stro
 | Teil | Wofür | Beispiel (Amazon.de) | ca. Preis |
 |---|---|---|---|
 | **ESP32-2432S028 („CYD“, Cheap Yellow Display)**, 2,8 Zoll, 320 × 240, Touch | Mini-Computer mit WLAN **und** Display in einem | [B0H44PR159](https://www.amazon.de/dp/B0H44PR159) | 16 € |
+| *oder:* dasselbe Board in der Variante mit **ST7789**-Chip (USB-C **und** Micro-USB) | gleich, auf der Projektseite den ST7789-Knopf nehmen | [B0GG3D3H8F](https://www.amazon.de/dp/B0GG3D3H8F) | 19 € |
 | **PLA-Filament** in **Cremeweiß / Knochenweiß** (der typische Farbton alter Monitore; Beige oder Hellgrau gehen auch), z. B. eSUN Matte PLA *Cremeweiß* | Gehäuse (ca. 110–150 g nötig) | [B0D7GSSH41](https://www.amazon.de/dp/B0D7GSSH41) | ca. 10 € / kg |
 | USB-Kabel (Micro-USB oder USB-C, je nach Board, **mit Datenleitungen**) + 5-V-USB-Netzteil | Strom und Software aufspielen | oft schon vorhanden | – |
 
-Preise: Stand November 2026. Es gibt dieses Board von vielen Händlern, achte auf die Bezeichnung **ESP32-2432S028** und **2,8 Zoll**.
+Preise: Stand November 2026. Es gibt dieses Board von vielen Händlern, achte auf die Bezeichnung **ESP32-2432S028** und **2,8 Zoll**. Es kommt mit zwei verschiedenen Display-Chips (**ILI9341** oder **ST7789**). Beide funktionieren, du wählst beim Aufspielen nur den passenden Knopf. Welcher Chip drin ist, steht meist in der Beschreibung.
 
 💡 **Tipp:** In Schulen, Makerspaces und Bibliotheken gibt es oft 3D-Drucker **mit** Filament. Frag einfach.
 
@@ -158,7 +159,7 @@ Das nennt man **Flashen**: Die Software wird auf den kleinen Computer gespielt. 
 
 1. Board per USB an den Computer stecken (Kabel **mit Datenleitungen**).
 2. Die [**Projektseite**](https://apirz-ai.github.io/claude-usage-monitor-lite/de/) in **Chrome** oder **Edge** öffnen (Safari und Firefox können das nicht).
-3. Auf **„Installieren · USB links“** klicken → das Gerät auswählen → **Install**. Steht das Bild später auf dem Kopf, nimm **„USB rechts“**.
+3. Den passenden Knopf wählen: **USB-Seite** (links/rechts) und **Display-Chip** (ILI9341 oder ST7789, steht in der Amazon-Beschreibung; Board mit USB-C **und** Micro-USB hat meist ST7789). Zum Beispiel **„Installieren · USB links · ILI9341“** klicken → das Gerät auswählen → **Install**. Steht das Bild später auf dem Kopf, nimm **„USB rechts“**.
 4. Warten, bis „Installation complete“ erscheint. Fertig.
 
 **Windows findet das Gerät nicht?** Das Board nutzt einen CH340- oder CP210x-Chip. Installiere bei Bedarf den Treiber des Herstellers (Suche: „CH340 Treiber“ bzw. „CP210x Treiber“) und starte Chrome neu.
@@ -248,7 +249,7 @@ Auch das iPhone braucht eine **eigene** Anmeldung, also das Skript für jedes Ge
 | PowerShell: *„claude“ wurde nicht erkannt* | Das Einrichtungs-Skript sucht Claude Code selbst. Sonst PowerShell schließen, neu öffnen und erneut versuchen. |
 | Download der `.ps1`-Datei wird blockiert | Im Browser „Behalten“ wählen. Oder den Inhalt von der Webseite kopieren und in eine Datei `UsageMonitor-Einrichtung.ps1` speichern. |
 | Computer erkennt das Board nicht | Anderes Kabel probieren (manche laden nur). Treiber CH340/CP210x installieren. BOOT halten, RST drücken. |
-| Bildschirm bleibt nach der Installation weiß oder schwarz | Manche Boards haben einen anderen Display-Chip (ST7789 statt ILI9341). In `config.h` die Zeile `#define DISPLAY_ST7789` aktivieren, `DISPLAY_INVERT` auf `true` stellen und mit der Arduino IDE neu aufspielen. Bitte in den Issues melden. |
+| Bildschirm bleibt nach der Installation weiß oder schwarz | Falscher Display-Chip gewählt. Auf der Projektseite den Knopf mit dem **anderen Chip** (ILI9341 ↔ ST7789) aufspielen. Es geht nichts kaputt. |
 | Farben sehen „negativ“ aus oder Rot/Blau vertauscht | In `config.h` `DISPLAY_INVERT` bzw. `DISPLAY_RGB_ORDER` umstellen (`true`/`false`). |
 | Bild steht auf dem Kopf | Auf der Webseite die **andere** USB-Seite aufspielen (und das passende Gehäuse drucken), oder in `config.h` `DISPLAY_ROTATION` zwischen `1` und `3` wechseln. |
 | Tippen reagiert nicht | Stattdessen die BOOT-Taste (Rückseite) benutzen. Bitte in den Issues melden. |
@@ -257,7 +258,7 @@ Auch das iPhone braucht eine **eigene** Anmeldung, also das Skript für jedes Ge
 | Anzeige: **„WLAN getrennt“** | Router prüfen. Neues WLAN: Bildschirm 10 Sekunden halten und neu einrichten. |
 | Unregelmäßige Fehler beim Abrufen | In `config.h` ist `SPRITE_BITS` auf `8` gestellt (spart Speicher). Falls du es auf `16` gestellt hast: zurück auf `8`. |
 | Sitzung zeigt **„Keine Sitzung“** | Normal, wenn gerade kein 5-Stunden-Fenster läuft. |
-| USB-Stecker passt nicht durch die Seitenöffnung | In der `.scad`-Datei `usb_oeff_b` / `usb_oeff_t` größer machen und neu drucken. |
+| USB-Stecker passt nicht durch die Seitenöffnung | In der `.scad`-Datei `usb_oeff_b` / `usb_oeff_t` größer machen und neu drucken. Sitzt die Buchse nicht mittig (z. B. Board mit zwei Buchsen), `usb_mitte` anpassen (Abstand Buchsenmitte zur Platinen-Oberkante). |
 | Board passt nicht ins Gehäuse | Maße in der `.scad`-Datei anpassen (Abschnitt 2). |
 
 ---
