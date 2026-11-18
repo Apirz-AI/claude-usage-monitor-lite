@@ -20,7 +20,7 @@ Session (5 hours), week (7 days) and when it resets. Powered over a USB cable, c
 | | Step | Time |
 |---|---|---|
 | 1 | **Buy the part**: [board](https://www.amazon.de/dp/B0H44PR159) (about €16) | 5 min |
-| 2 | **Print the case**: 3 files from `stl/` | about 4 h |
+| 2 | **Print the case**: 3 files from `stl/` | slicer shows the time |
 | 3 | **Install the software**: click one button on the project page | 2 min |
 | 4 | **Assemble**: insert board, lid, stand | 5 min |
 | 5 | **Connect to Claude**: setup script on your PC, Wi-Fi on the device | 10 min |
@@ -30,7 +30,7 @@ Session (5 hours), week (7 days) and when it resets. Powered over a USB cable, c
 | Part | Status |
 |---|---|
 | Parts list | ✅ done |
-| Case (STL) | ⏳ designed from datasheets, **dimensions not yet checked on a real board**, first test print pending |
+| Case (STL) | ✅ fully designed, print files generated without errors · ⏳ dimensions from datasheets, **first test print with a real board pending** |
 | Firmware (device) | ⏳ written, **not yet tested on real hardware** (pin layout of the common ESP32-2432S028 board) |
 | iPhone widget | ✅ in daily use |
 | Setup script (Windows) | ✅ in daily use |
@@ -52,6 +52,7 @@ Session (5 hours), week (7 days) and when it resets. Powered over a USB cable, c
 7. [Bonus: iPhone widget](#7-bonus-iphone-widget)
 8. [Troubleshooting](#8-troubleshooting)
 9. [How it works](#9-how-it-works)
+10. [Publish your own copy](#10-publish-your-own-copy)
 
 ---
 
@@ -60,7 +61,7 @@ Session (5 hours), week (7 days) and when it resets. Powered over a USB cable, c
 | Part | Purpose | Example (Amazon.de) | approx. price |
 |---|---|---|---|
 | **ESP32-2432S028 ("CYD", Cheap Yellow Display)**, 2.8 inch, 320 × 240, touch | Tiny computer with Wi-Fi **and** display in one | [B0H44PR159](https://www.amazon.de/dp/B0H44PR159) | €16 |
-| **PLA filament**, one colour (cream white, beige or light grey) | Case (about 60 g needed) | any | about €10 / kg |
+| **PLA filament** in **cream / bone white** (the classic colour of old monitors; beige or light grey also work), e.g. eSUN Matte PLA *cream white* | Case (about 110–150 g needed) | [B0D7GSSH41](https://www.amazon.de/dp/B0D7GSSH41) | about €10 / kg |
 | USB cable (Micro-USB or USB-C depending on the board, **with data lines**) + 5 V USB charger | Power and installing the software | usually already at home | – |
 
 Prices: November 2026. Many shops sell this board; look for **ESP32-2432S028** and **2.8 inch**.
@@ -73,19 +74,31 @@ Prices: November 2026. Many shops sell this board; look for **ESP32-2432S028** a
 
 ## 2. Print the case
 
-There are **two variants**, depending on which side the USB socket of your board is on when it is in landscape. The cable leaves through an opening in the side.
+The case looks like a 90s CRT monitor: 4:3 front, centred picture, wide chin with four knobs, LED and power switch, deep back with vents and an oval stand. Same layout as the [battery version](https://github.com/Apirz-AI/claude-usage-monitor), just bigger because board and display are bigger.
 
-| File set | USB socket in landscape | Firmware button |
+![Case in cream white](docs/gehaeuse.png)
+
+There are **two variants**, depending on which side the USB socket of your board is on in landscape. The cable plugs in from the side through an opening, straight into the socket.
+
+| | **"USB left"** (standard) | **"USB right"** |
 |---|---|---|
-| `usagemonitor_usb-links_*` | left | "USB left" |
-| `usagemonitor_usb-rechts_*` | right | "USB right" |
+| USB socket in landscape | left | right |
+| Cable | leaves on the **left** side, any normal cable | leaves on the **right** side, any normal cable |
+| Firmware button on the project page | "USB left" | "USB right" |
+| Size (W × H × D) | about 116 × 91 × 51 mm | about 116 × 91 × 51 mm |
 
 > To our knowledge **"USB left"** fits the standard case. Whether that is true for your board, you see at the first power-up: if the picture is upside down, take the other side.
 > Tip: **Install and test the software first, then print.** That way you know which side you need.
 
-**Files:** The [`stl/`](stl/) folder holds the ready-to-print parts, three files per side: **case**, **back lid** and **stand**.
+**Files** (folder [`stl/`](stl/), ready to print):
 
-Change dimensions: install [OpenSCAD](https://openscad.org) (free) → open `enclosure/usagemonitor_gehaeuse.scad` → set `usb` and `teil` at the top → **F6** → *File → Export → STL*.
+| Part | Variant "USB left" | Variant "USB right" |
+|---|---|---|
+| Case | [`usagemonitor_usb-links_gehaeuse.stl`](stl/usagemonitor_usb-links_gehaeuse.stl) | [`usagemonitor_usb-rechts_gehaeuse.stl`](stl/usagemonitor_usb-rechts_gehaeuse.stl) |
+| Back lid | [`usagemonitor_usb-links_deckel.stl`](stl/usagemonitor_usb-links_deckel.stl) | [`usagemonitor_usb-rechts_deckel.stl`](stl/usagemonitor_usb-rechts_deckel.stl) |
+| Stand | [`usagemonitor_usb-links_fuss.stl`](stl/usagemonitor_usb-links_fuss.stl) | [`usagemonitor_usb-rechts_fuss.stl`](stl/usagemonitor_usb-rechts_fuss.stl) |
+
+Change dimensions: install [OpenSCAD](https://openscad.org) (free) → open `enclosure/usagemonitor_gehaeuse.scad` → set `usb` and `teil` at the top → **F6** → *File → Export → STL*. The preview (**F5**) shows the case in the filament colour (value `farbe` at the top of the file).
 
 ### How the file gets to the printer (for beginners)
 
@@ -101,7 +114,7 @@ A 3D printer cannot print an STL file directly. In between sits a **slicer**: a 
 4. **Drag** the three STL files of your side into the slicer.
 5. **Lay the parts down** correctly (table below). "Lay on face" helps.
 6. Apply the settings from the table, **supports off**.
-7. Click **"Slice"**. The slicer shows print time and filament use (about 4 hours, about 60 g).
+7. Click **"Slice"**. The slicer shows print time and filament use (about 110–150 g).
 8. **Export the G-code** (SD card, USB stick) or press **"Print"** on Wi-Fi printers.
 9. Watch the **first layer**. If it sticks cleanly, the rest runs by itself.
 10. Let the parts cool and remove them carefully from the plate.
@@ -124,12 +137,16 @@ A 3D printer cannot print an STL file directly. In between sits a **slicer**: a 
 
 ## 3. Assemble
 
-> Install the software **first** (section 4) while the board is still easy to reach.
+> Install the software **first** (section 4) while the board is still easy to reach. No tools needed.
 
-1. Place the **board from the back** into the case: the display faces the front window and sits in the pocket. The USB socket is at the side opening.
-2. Plug the cable in from the side and check that nothing jams.
-3. Push the **lid** onto the back. It holds by friction. The two ribs press the board gently forward.
-4. Put the case on the **stand**.
+1. **Clean the parts:** carefully remove strings and edges from printing, especially at the picture opening and the USB opening.
+2. Lay the **case face down** on the table (soft cloth underneath).
+3. **Insert the board from the back**, display facing down towards the picture opening. The display glass slides into its pocket. The **USB socket** sits right at the **side opening**.
+4. **Check:** seen from the front, is the picture centred and straight in the frame? Is the glass lying flat? Never force anything.
+5. Plug the **USB cable** in from the side. The plug must go fully into the socket without touching the case.
+6. Push the **lid** onto the back. It holds by friction. The two ribs press the board gently forward. If the board still wobbles, put a piece of foam or an adhesive pad between rib and board.
+7. Put the case on the **stand**.
+8. Plug in the charger: the picture appears after a few seconds.
 
 ---
 
@@ -228,6 +245,8 @@ The iPhone also needs its **own** login, so run the script once per device.
 
 | Problem | Solution |
 |---|---|
+| PowerShell: *"claude" is not recognized* | The setup script looks for Claude Code by itself. Otherwise close PowerShell, open it again and retry. |
+| Download of the `.ps1` file is blocked | Choose "Keep" in the browser. Or copy the content from the web page into a file `UsageMonitor-Einrichtung.ps1`. |
 | Computer doesn't detect the board | Try another cable (some only charge). Install the CH340/CP210x driver. Hold BOOT, tap RST. |
 | Screen stays white or black after install | Some boards use a different display chip (ST7789 instead of ILI9341). In `config.h` enable the line `#define DISPLAY_ST7789`, set `DISPLAY_INVERT` to `true` and reflash with the Arduino IDE. Please report it in Issues. |
 | Colours look like a negative, or red/blue swapped | In `config.h` switch `DISPLAY_INVERT` or `DISPLAY_RGB_ORDER` (`true`/`false`). |
@@ -238,14 +257,17 @@ The iPhone also needs its **own** login, so run the script once per device.
 | Display says **"Wi-Fi lost"** | Check your router. New Wi-Fi: hold the screen 10 seconds and set up again. |
 | Sporadic errors when fetching | `SPRITE_BITS` in `config.h` is `8` (saves memory). If you set it to `16`, change it back to `8`. |
 | Session shows **"No session"** | Normal when no 5-hour window is running. |
+| USB plug doesn't fit through the side opening | Make `usb_oeff_b` / `usb_oeff_t` larger in the `.scad` file and print again. |
 | Board doesn't fit the case | Adjust dimensions in the `.scad` file (section 2). |
 
 ---
 
 ## 9. How it works
 
+Short explanations so you can join the conversation:
+
 - **ESP32**: A microcontroller, a tiny computer on a chip with built-in Wi-Fi. It is the brain of the device.
-- **API / endpoint**: A fixed internet address that returns data instead of a web page. Here it returns your limit as numbers.
+- **API / endpoint**: A fixed internet address that returns data instead of a web page. Like a vending machine: press a number, get exactly one drink. Here it returns your limit as numbers.
 - **OAuth / token**: Instead of your password the device gets an **access token** (day pass, expires after hours) and a **refresh token** (ID card to get new day passes). Your password never leaves your PC.
 - **Captive portal**: The setup page that opens automatically when you join `UsageMonitor-Setup`. Like hotel Wi-Fi login.
 - **SPI / ILI9341 / XPT2046**: SPI is the data line. ILI9341 is the chip in the display, XPT2046 the chip that detects your tap.
@@ -266,6 +288,20 @@ The iPhone also needs its **own** login, so run the script once per device.
 | `web/` | Project page extras | no |
 | `docs/` | Images for this guide | no |
 | `.github/` | Build automation: compiles the firmware and creates the print files | no |
+
+---
+
+## 10. Publish your own copy
+
+How to put your own, modified copy online on GitHub (**Fork** at the top right also works). Firmware and STL files are then built **automatically**.
+
+1. Create a free account on [github.com](https://github.com).
+2. Top right **+ → New repository** → name `claude-usage-monitor-lite` → **Public** → **Create**.
+3. Click **"uploading an existing file"** → drag in all files and folders of this project → **Commit changes**.
+   Important: the hidden folder `.github` must be uploaded too. If it is missing after dragging: **Add file → Create new file**, type `.github/workflows/build.yml` as the name and paste the content.
+4. Set **Settings → Pages → Source: "GitHub Actions"**.
+5. Click **Actions** at the top and wait until the run is green (about 5–10 minutes).
+6. Your page is then at `https://YOURNAME.github.io/claude-usage-monitor-lite/` with browser flasher, STL files and script.
 
 ---
 

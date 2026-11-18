@@ -27,6 +27,9 @@
 
 usb   = "links";   // [links, rechts]
 teil  = "alles";   // [gehaeuse, deckel, fuss, alles]
+farbe = "#EDE6D6";  // Knochenweiss / Cremeweiss = Farbe des Filaments. So zeigt die Vorschau (F5)
+                    // das Gehaeuse, wie es gedruckt aussieht. Andere Filamentfarbe? Hier anpassen.
+
 
 // ---------------- MASSE DER BAUTEILE (nachmessen!) --------------------
 board_l   = 86.0;    // Platine lang
@@ -50,12 +53,12 @@ wand      = 2.4;
 front     = 2.6;     // Vorderwand
 spiel     = 0.4;
 rand_s    = 5.0;     // Rahmen seitlich
-rand_o    = 12.0;    // Rahmen oben (Roehren-Look, wie beim Akku-Modell)
-boden     = 12.0;    // Kinn unten (Knoepfe, LED, Schalter-Optik)
+rand_o    = 14.0;    // Rahmen oben  } Front ca. 4:3 wie ein Roehrenmonitor
+boden     = 18.0;    // Kinn unten   } (Knoepfe, LED, Schalter-Optik)
 ecke_r    = 3.5;
 ruecken_r = 3.0;
 front_d   = 9.0;     // Tiefe des geraden Rahmens vorne
-tiefe_extra = 8.0;   // zusaetzliche Tiefe fuer den Roehren-Look
+tiefe_extra = 29.0;  // zusaetzliche Tiefe: der typische Roehren-"Buckel" hinten
 deckel_t  = 2.4;
 lippe_t   = 3.0;
 toleranz  = 0.25;
@@ -84,7 +87,7 @@ aus_h = boden + inn_h + wand + rand_o;
 aus_t = front + modul_t + inn_t;
 inn_z = boden;
 rue_x = rand_s;  rue_b = aus_b - 2*rand_s;
-rue_z = 0;       rue_h = aus_h - rand_o*0.5;
+rue_z = 0;       rue_h = inn_z + inn_h + wand + 1;   // Ruecken oben deutlich niedriger (Roehren-Haube)
 
 board_z = inn_z + spiel;
 // Display-Modul sitzt am Ende gegenueber der USB-Buchse
@@ -115,10 +118,31 @@ module koerper() {
   }
 }
 
+// Innenraum ausserhalb des Board-Schachts: hohl, damit nicht unnoetig
+// viel Filament verbraucht wird (Wandstaerke "wand" ueberall gleich)
+module koerper_innen() {
+  slab(wand, wand, aus_b - 2*wand, aus_h - 2*wand, max(ecke_r - wand, 0.5), front, front_d - front + 0.01);
+  hull() {
+    slab(wand, wand, aus_b - 2*wand, aus_h - 2*wand, max(ecke_r - wand, 0.5), front_d, 0.01);
+    slab(rue_x + wand, rue_z + wand, rue_b - 2*wand, rue_h - 2*wand, max(ruecken_r - wand, 0.5), aus_t, 1);
+  }
+}
+module hohlraum() {
+  difference() {
+    koerper_innen();
+    // Schacht fuer das Board (Waende bleiben stehen, Deckel-Lippe greift hinein)
+    translate([inn_x - wand, -1, inn_z - wand]) cube([inn_b + 2*wand, aus_t + 3, inn_h + 2*wand]);
+    // Block um die Fuss-Aufnahme
+    translate([zap_x - wand, zap_y - wand, -1]) cube([zap_b + 2*wand, zap_t + 2*wand, zap_h + wand + 1]);
+  }
+}
+
 module gehaeuse() {
-  kz = (g_z - 2.5) / 2;                          // Mitte des Kinns
+  kz = (g_z - 4) / 2;                            // Mitte des Kinns
   difference() {
     koerper();
+
+    hohlraum();
 
     // Innenraum (hinten offen), beginnt hinter der Modul-Tasche
     translate([inn_x, front + modul_t, inn_z]) cube([inn_b, inn_t + 1, inn_h]);
@@ -130,7 +154,7 @@ module gehaeuse() {
     // Bildfenster mit schraeger Einfassung
     slab(g_x, g_z, glas_b, glas_h, 3, -1, front + 2);
     hull() {
-      slab(g_x - 2.5, g_z - 2.5, glas_b + 5, glas_h + 5, 5.5, -0.5, 0.5);
+      slab(g_x - 4, g_z - 4, glas_b + 8, glas_h + 8, 7, -0.5, 0.5);
       slab(g_x, g_z, glas_b, glas_h, 3, 1.0, 0.01);
     }
 
@@ -142,8 +166,8 @@ module gehaeuse() {
 
     // Kinn: Regler-Mulden rechts, Power-LED links
     for (i = [0:3])
-      translate([aus_b - 9 - i*4.6, -0.1, kz]) rotate([-90,0,0]) cylinder(d=2.8, h=0.7);
-    translate([8, -0.1, kz]) rotate([-90,0,0]) cylinder(d=1.8, h=0.7);
+      translate([aus_b - 14 - i*7.5, -0.1, kz]) rotate([-90,0,0]) cylinder(d=4.6, h=1.0);
+    translate([12, -0.1, kz]) rotate([-90,0,0]) cylinder(d=2.8, h=1.0);
 
     // Lueftungsschlitze oben und seitlich am Ruecken
     for (i = [0:4])
@@ -155,8 +179,8 @@ module gehaeuse() {
     translate([zap_x, zap_y, -1]) cube([zap_b, zap_t, zap_h + 1]);
   }
   // Kinn: Netzschalter-Optik (erhaben)
-  translate([12, 0, kz - 1.6]) rotate([90,0,0])
-    linear_extrude(0.8) rrect2d(6, 3.2, 1.2);
+  translate([19, 0, kz - 2.5]) rotate([90,0,0])
+    linear_extrude(1.0) rrect2d(10, 5, 1.8);
 }
 
 // ---------------- Standfuss (oval, Dreh-Fuss-Optik) ------------------
@@ -186,16 +210,19 @@ module deckel() {
           cube([inn_b - 2*toleranz, inn_h - 2*toleranz, lippe_t]);
           translate([1.6, 1.6, -1]) cube([inn_b - 2*toleranz - 3.2, inn_h - 2*toleranz - 3.2, lippe_t + 2]);
         }
-      // Druckleisten: halten die Platine sanft nach vorne
-      for (dz = [0.25, 0.75])
-        translate([lx + 4, lz + inn_h*dz - 1, deckel_t])
-          cube([inn_b - 8, 2, lippe_t + tiefe_extra - 1.0]);
+      // Druckstege: halten die Platine sanft nach vorne
+      // Laenge so, dass sie genau am Ende von "rueck_t" hinter der Platine enden
+      // 6 kurze Stege statt durchgehender Leisten: spart Filament
+      for (dz = [0.25, 0.75]) for (fx = [0.12, 0.5, 0.88])
+        translate([lx + inn_b*fx - 6, lz + inn_h*dz - 1.2, deckel_t])
+          cube([12, 2.4, aus_t - (front + modul_t + pcb_t + rueck_t)]);
     }
   }
 }
 
 // ---------------- Ausgabe --------------------------------------------
 fuss_hoehe = 6;
+color(farbe) {
 if (teil == "gehaeuse") {
   gehaeuse();
 } else if (teil == "deckel") {
@@ -206,4 +233,5 @@ if (teil == "gehaeuse") {
   translate([0, 0, fuss_hoehe]) gehaeuse();
   translate([aus_b/2 - fuss_b/2, zap_cy - fuss_t/2, 0]) fuss();
   translate([rue_x, aus_t + 10, rue_z + fuss_hoehe]) rotate([90,0,0]) translate([0,0,-deckel_t]) deckel();
+}
 }

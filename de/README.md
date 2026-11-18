@@ -20,7 +20,7 @@ Sitzung (5 Stunden), Woche (7 Tage) und wann es wieder zurückgesetzt wird. Stro
 | | Schritt | Dauer |
 |---|---|---|
 | 1 | **Teile kaufen**: [Board](https://www.amazon.de/dp/B0H44PR159) (ca. 16 €) | 5 min |
-| 2 | **Gehäuse drucken**: 3 Dateien aus `stl/` in den 3D-Drucker | ca. 4 h |
+| 2 | **Gehäuse drucken**: 3 Dateien aus `stl/` in den 3D-Drucker | Slicer zeigt die Zeit |
 | 3 | **Software aufspielen**: auf der Projektseite einen Knopf klicken | 2 min |
 | 4 | **Zusammenbauen**: Board einlegen, Deckel, Fuß | 5 min |
 | 5 | **Mit Claude verbinden**: Einrichtungs-Skript am PC, WLAN am Gerät | 10 min |
@@ -30,7 +30,7 @@ Sitzung (5 Stunden), Woche (7 Tage) und wann es wieder zurückgesetzt wird. Stro
 | Teil | Stand |
 |---|---|
 | Teileliste | ✅ fertig |
-| Gehäuse (STL) | ⏳ konstruiert nach Datenblatt, **Maße noch nicht am echten Board geprüft**, erster Probedruck steht aus |
+| Gehäuse (STL) | ✅ fertig konstruiert, Druckdateien fehlerfrei erzeugt · ⏳ Maße nach Datenblatt, **erster Probedruck mit echtem Board steht aus** |
 | Firmware (Gerät) | ⏳ geschrieben, **noch nicht auf echter Hardware getestet** (Pinbelegung des üblichen ESP32-2432S028-Boards) |
 | iPhone-Widget | ✅ läuft im Alltag |
 | Einrichtungs-Skript (Windows) | ✅ läuft im Alltag |
@@ -52,6 +52,7 @@ Sitzung (5 Stunden), Woche (7 Tage) und wann es wieder zurückgesetzt wird. Stro
 7. [Bonus: iPhone-Widget](#7-bonus-iphone-widget)
 8. [Wenn etwas nicht klappt](#8-wenn-etwas-nicht-klappt)
 9. [So funktioniert es](#9-so-funktioniert-es)
+10. [Projekt selbst veröffentlichen](#10-projekt-selbst-veröffentlichen)
 
 ---
 
@@ -60,7 +61,7 @@ Sitzung (5 Stunden), Woche (7 Tage) und wann es wieder zurückgesetzt wird. Stro
 | Teil | Wofür | Beispiel (Amazon.de) | ca. Preis |
 |---|---|---|---|
 | **ESP32-2432S028 („CYD“, Cheap Yellow Display)**, 2,8 Zoll, 320 × 240, Touch | Mini-Computer mit WLAN **und** Display in einem | [B0H44PR159](https://www.amazon.de/dp/B0H44PR159) | 16 € |
-| **PLA-Filament**, eine Farbe (Cremeweiß, Beige oder Hellgrau) | Gehäuse (ca. 60 g nötig) | beliebig | ca. 10 € / kg |
+| **PLA-Filament** in **Cremeweiß / Knochenweiß** (der typische Farbton alter Monitore; Beige oder Hellgrau gehen auch), z. B. eSUN Matte PLA *Cremeweiß* | Gehäuse (ca. 110–150 g nötig) | [B0D7GSSH41](https://www.amazon.de/dp/B0D7GSSH41) | ca. 10 € / kg |
 | USB-Kabel (Micro-USB oder USB-C, je nach Board, **mit Datenleitungen**) + 5-V-USB-Netzteil | Strom und Software aufspielen | oft schon vorhanden | – |
 
 Preise: Stand November 2026. Es gibt dieses Board von vielen Händlern, achte auf die Bezeichnung **ESP32-2432S028** und **2,8 Zoll**.
@@ -73,19 +74,31 @@ Preise: Stand November 2026. Es gibt dieses Board von vielen Händlern, achte au
 
 ## 2. Gehäuse drucken
 
-Es gibt **zwei Varianten**, je nachdem auf welcher Seite die USB-Buchse deines Boards im Querformat sitzt. Das Kabel geht seitlich durch eine Öffnung.
+Das Gehäuse sieht aus wie ein Röhrenmonitor der 90er: Front im Format 4:3, Bild mittig, breites Kinn mit vier Reglern, LED und Netzschalter, tiefer Rücken mit Lüftungsschlitzen und ovaler Standfuß. Gleicher Aufbau wie beim [Modell mit Akku](https://github.com/Apirz-AI/claude-usage-monitor), nur größer, weil Board und Display größer sind.
 
-| Datei-Satz | USB-Buchse im Querformat | Firmware-Knopf |
+![Gehäuse in Cremeweiß](docs/gehaeuse.png)
+
+Es gibt **zwei Varianten**, je nachdem auf welcher Seite die USB-Buchse deines Boards im Querformat sitzt. Das Kabel steckt seitlich durch eine Öffnung direkt in der Buchse.
+
+| | **„USB links“** (Standard) | **„USB rechts“** |
 |---|---|---|
-| `usagemonitor_usb-links_*` | links | „USB links“ |
-| `usagemonitor_usb-rechts_*` | rechts | „USB rechts“ |
+| USB-Buchse im Querformat | links | rechts |
+| Kabel | geht **links** seitlich raus, jedes normale Kabel | geht **rechts** seitlich raus, jedes normale Kabel |
+| Firmware-Knopf auf der Projektseite | „USB links“ | „USB rechts“ |
+| Größe (B × H × T) | ca. 116 × 91 × 51 mm | ca. 116 × 91 × 51 mm |
 
 > Nach unserem Kenntnisstand passt **„USB links“** zum Standardfall. Ob es bei deinem Board stimmt, siehst du beim ersten Einschalten: Steht das Bild auf dem Kopf, nimm die andere Seite.
 > Tipp: **Erst die Software aufspielen und testen, dann drucken.** So weißt du, welche Seite du brauchst.
 
-**Dateien:** Im Ordner [`stl/`](stl/) liegen die Teile druckfertig, je Seite drei Dateien: **Gehäuse**, **Rückdeckel** und **Standfuß**.
+**Dateien** (Ordner [`stl/`](stl/), druckfertig):
 
-Maße anpassen: [OpenSCAD](https://openscad.org) (kostenlos) installieren → `enclosure/usagemonitor_gehaeuse.scad` öffnen → oben `usb` und `teil` einstellen → **F6** → *Datei → Exportieren → STL*.
+| Teil | Variante „USB links“ | Variante „USB rechts“ |
+|---|---|---|
+| Gehäuse | [`usagemonitor_usb-links_gehaeuse.stl`](stl/usagemonitor_usb-links_gehaeuse.stl) | [`usagemonitor_usb-rechts_gehaeuse.stl`](stl/usagemonitor_usb-rechts_gehaeuse.stl) |
+| Rückdeckel | [`usagemonitor_usb-links_deckel.stl`](stl/usagemonitor_usb-links_deckel.stl) | [`usagemonitor_usb-rechts_deckel.stl`](stl/usagemonitor_usb-rechts_deckel.stl) |
+| Standfuß | [`usagemonitor_usb-links_fuss.stl`](stl/usagemonitor_usb-links_fuss.stl) | [`usagemonitor_usb-rechts_fuss.stl`](stl/usagemonitor_usb-rechts_fuss.stl) |
+
+Maße anpassen: [OpenSCAD](https://openscad.org) (kostenlos) installieren → `enclosure/usagemonitor_gehaeuse.scad` öffnen → oben `usb` und `teil` einstellen → **F6** → *Datei → Exportieren → STL*. Die Vorschau (**F5**) zeigt das Gehäuse in der Filamentfarbe (Wert `farbe` oben in der Datei).
 
 ### So kommt die Datei auf den Drucker (für Einsteiger)
 
@@ -101,7 +114,7 @@ Ein 3D-Drucker kann eine STL-Datei nicht direkt drucken. Dazwischen kommt ein **
 4. Die drei STL-Dateien deiner Seite **hineinziehen** (Drag & Drop).
 5. Teile richtig **hinlegen** (Tabelle unten). „Auf Fläche legen“ / „Lay on face“ hilft.
 6. Einstellungen aus der Tabelle setzen, **Stützstrukturen aus**.
-7. **„Slicen“** klicken. Der Slicer zeigt Druckzeit und Filamentverbrauch an (ca. 4 Stunden, ca. 60 g).
+7. **„Slicen“** klicken. Der Slicer zeigt Druckzeit und Filamentverbrauch an (ca. 110–150 g).
 8. **G-Code exportieren** (SD-Karte, USB-Stick) oder bei WLAN-Druckern direkt **„Drucken“**.
 9. Die **erste Schicht** beobachten. Haftet sie sauber, läuft der Rest von allein.
 10. Teile abkühlen lassen und vorsichtig von der Platte lösen.
@@ -124,12 +137,16 @@ Ein 3D-Drucker kann eine STL-Datei nicht direkt drucken. Dazwischen kommt ein **
 
 ## 3. Zusammenbauen
 
-> Spiel die Software am besten **vorher** auf (Abschnitt 4), solange das Board noch frei zugänglich ist.
+> Spiel die Software am besten **vorher** auf (Abschnitt 4), solange das Board noch frei zugänglich ist. Du brauchst kein Werkzeug.
 
-1. **Board von hinten** in das Gehäuse legen: Das Display zeigt zur Frontscheibe und passt in die Tasche. Die USB-Buchse liegt an der Seitenöffnung.
-2. Kabel von der Seite einstecken und prüfen, dass es sich nicht verklemmt.
-3. **Deckel** hinten aufstecken. Er hält durch Klemmung. Die zwei Leisten drücken das Board sanft nach vorne.
-4. Gehäuse auf den **Standfuß** stecken.
+1. **Teile säubern:** Fäden und Ränder vom Druck vorsichtig abziehen, besonders an der Bildöffnung und an der USB-Öffnung.
+2. **Gehäuse mit der Front nach unten** auf den Tisch legen (weiches Tuch drunter).
+3. **Board von hinten einlegen**, Display nach unten zur Bildöffnung. Das Display-Glas rutscht in die passende Tasche. Die **USB-Buchse** liegt genau an der **seitlichen Öffnung**.
+4. **Prüfen:** Von vorne gesehen sitzt das Bild mittig und gerade im Rahmen? Liegt das Glas plan auf? Nichts mit Gewalt drücken.
+5. **USB-Kabel** von der Seite einstecken. Der Stecker muss ganz in die Buchse gehen, ohne am Gehäuse anzustoßen.
+6. **Deckel** hinten aufstecken. Er hält durch Klemmung. Die zwei Leisten drücken das Board sanft nach vorne. Wackelt das Board noch, ein Stück Schaumstoff oder Klebepad zwischen Leiste und Board legen.
+7. Gehäuse auf den **Standfuß** stecken.
+8. Netzteil einstecken: Das Bild erscheint nach wenigen Sekunden.
 
 ---
 
@@ -228,6 +245,8 @@ Auch das iPhone braucht eine **eigene** Anmeldung, also das Skript für jedes Ge
 
 | Problem | Lösung |
 |---|---|
+| PowerShell: *„claude“ wurde nicht erkannt* | Das Einrichtungs-Skript sucht Claude Code selbst. Sonst PowerShell schließen, neu öffnen und erneut versuchen. |
+| Download der `.ps1`-Datei wird blockiert | Im Browser „Behalten“ wählen. Oder den Inhalt von der Webseite kopieren und in eine Datei `UsageMonitor-Einrichtung.ps1` speichern. |
 | Computer erkennt das Board nicht | Anderes Kabel probieren (manche laden nur). Treiber CH340/CP210x installieren. BOOT halten, RST drücken. |
 | Bildschirm bleibt nach der Installation weiß oder schwarz | Manche Boards haben einen anderen Display-Chip (ST7789 statt ILI9341). In `config.h` die Zeile `#define DISPLAY_ST7789` aktivieren, `DISPLAY_INVERT` auf `true` stellen und mit der Arduino IDE neu aufspielen. Bitte in den Issues melden. |
 | Farben sehen „negativ“ aus oder Rot/Blau vertauscht | In `config.h` `DISPLAY_INVERT` bzw. `DISPLAY_RGB_ORDER` umstellen (`true`/`false`). |
@@ -238,14 +257,17 @@ Auch das iPhone braucht eine **eigene** Anmeldung, also das Skript für jedes Ge
 | Anzeige: **„WLAN getrennt“** | Router prüfen. Neues WLAN: Bildschirm 10 Sekunden halten und neu einrichten. |
 | Unregelmäßige Fehler beim Abrufen | In `config.h` ist `SPRITE_BITS` auf `8` gestellt (spart Speicher). Falls du es auf `16` gestellt hast: zurück auf `8`. |
 | Sitzung zeigt **„Keine Sitzung“** | Normal, wenn gerade kein 5-Stunden-Fenster läuft. |
+| USB-Stecker passt nicht durch die Seitenöffnung | In der `.scad`-Datei `usb_oeff_b` / `usb_oeff_t` größer machen und neu drucken. |
 | Board passt nicht ins Gehäuse | Maße in der `.scad`-Datei anpassen (Abschnitt 2). |
 
 ---
 
 ## 9. So funktioniert es
 
-- **ESP32**: Ein Mikrocontroller, also ein winziger Computer auf einem Chip mit eingebautem WLAN. Er ist das Gehirn des Geräts.
-- **API / Endpunkt**: Eine feste Internetadresse, die Daten statt einer Webseite liefert. Hier liefert sie dein Limit als Zahlen.
+Kurz erklärt, damit du mitreden kannst:
+
+- **ESP32**: Ein Mikrocontroller, also ein winziger Computer auf einem Chip mit eingebautem WLAN. Er ist wie das Gehirn des Geräts.
+- **API / Endpunkt**: Eine feste Internetadresse, die Daten statt einer Webseite liefert. Wie ein Automat: Man drückt eine Nummer und bekommt genau ein Getränk. Hier liefert sie dein Limit als Zahlen.
 - **OAuth / Token**: Statt deines Passworts bekommt das Gerät einen **Access-Token** (Tageskarte, läuft nach Stunden ab) und einen **Refresh-Token** (Ausweis, um neue Tageskarten zu holen). Dein Passwort verlässt nie deinen PC.
 - **Captive Portal**: Die Einrichtungsseite, die sich automatisch öffnet, wenn du dich mit `UsageMonitor-Setup` verbindest. Wie das WLAN-Login im Hotel.
 - **SPI / ILI9341 / XPT2046**: SPI ist die Datenleitung. ILI9341 ist der Chip im Display, XPT2046 der Chip, der dein Tippen erkennt.
@@ -266,6 +288,20 @@ Auch das iPhone braucht eine **eigene** Anmeldung, also das Skript für jedes Ge
 | `web/` | Zubehör der Projektseite | nein |
 | `docs/` | Bilder für diese Anleitung | nein |
 | `.github/` | Bau-Automatik: übersetzt die Firmware und erzeugt die Druckdateien | nein |
+
+---
+
+## 10. Projekt selbst veröffentlichen
+
+So stellst du eine eigene, angepasste Kopie auf GitHub online (oben rechts **Fork** geht auch). Die Firmware und die STL-Dateien werden dann **automatisch** gebaut.
+
+1. Kostenloses Konto auf [github.com](https://github.com) anlegen.
+2. Oben rechts **+ → New repository** → Name `claude-usage-monitor-lite` → **Public** → **Create**.
+3. **„uploading an existing file“** anklicken → alle Dateien und Ordner aus diesem Projekt hineinziehen → **Commit changes**.
+   Wichtig: Der versteckte Ordner `.github` muss mit hoch. Falls er beim Ziehen fehlt: **Add file → Create new file**, als Namen `.github/workflows/build.yml` eintippen und den Inhalt hineinkopieren.
+4. **Settings → Pages → Source: „GitHub Actions“** einstellen.
+5. Oben auf **Actions** klicken und warten, bis der Lauf grün ist (ca. 5–10 Minuten).
+6. Die Webseite steht dann unter `https://DEINNAME.github.io/claude-usage-monitor-lite/`. Dort sind Browser-Flasher, STL-Dateien und Skript.
 
 ---
 
